@@ -15,6 +15,7 @@ import com.example.util.AnswerNormalizer
 import com.example.util.HabitBoundaryManager
 import com.example.util.TtsManager
 import com.example.voice.gateway.VoiceGatewayService
+import com.example.voice.service.SpeechRecognitionManager
 import com.example.voice.model.ChatMessage
 import com.example.voice.model.InterviewType
 import com.example.voice.model.LearnerWord
@@ -707,12 +708,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     val voiceGatewayService = VoiceGatewayService(application, ttsManager = ttsManager)
+    private val speechRecognitionManager = SpeechRecognitionManager(application)
     val voiceSessionState: StateFlow<VoiceSessionState> = voiceGatewayService.sessionState
     val voiceMessages: StateFlow<List<ChatMessage>> = voiceGatewayService.messages
     val voiceEvaluation: StateFlow<SpeakingEvaluation?> = voiceGatewayService.latestEvaluation
 
     private val _voiceCurrentMode = MutableStateFlow(VoiceMode.FRIEND)
     val voiceCurrentMode: StateFlow<VoiceMode> = _voiceCurrentMode.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            speechRecognitionManager.finalTranscript.collect { transcript ->
+                voiceGatewayService.sendUserUtterance(transcript)
+            }
+        }
+    }
 
     fun openVoiceAssistant(
         mode: VoiceMode = VoiceMode.FRIEND,
@@ -725,7 +735,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             voiceGatewayService.startSession(
                 mode = mode,
                 targetLanguage = _selectedLanguage.value,
-                level = userProfile.value.targetLanguage, // or default level
+                level = userProfile.value.learningLevel,
                 interviewType = interviewType,
                 roleplayScenario = roleplayScenario
             )
@@ -742,7 +752,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             voiceGatewayService.startSession(
                 mode = mode,
                 targetLanguage = _selectedLanguage.value,
-                level = "B1",
+                level = userProfile.value.learningLevel,
                 interviewType = interviewType,
                 roleplayScenario = roleplayScenario
             )
@@ -755,14 +765,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun startVoiceListening() {
+        speechRecognitionManager.startListening(_selectedLanguage.value)
+    }
+
     fun interruptVoice() {
         viewModelScope.launch {
+            speechRecognitionManager.stopListening()
             voiceGatewayService.interrupt()
         }
     }
 
     fun endVoiceSession() {
         viewModelScope.launch {
+            speechRecognitionManager.stopListening()
             voiceGatewayService.endSession()
         }
     }
@@ -797,6 +813,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     override fun onCleared() {
         super.onCleared()
+        speechRecognitionManager.stopListening()
         ttsManager.shutdown()
     }
 }

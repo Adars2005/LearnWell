@@ -58,6 +58,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -102,6 +108,7 @@ fun VoiceAssistantScreen(
     onInterviewTypeSelected: (InterviewType) -> Unit,
     onRoleplayScenarioSelected: (RoleplayScenario) -> Unit,
     onSendUtterance: (String) -> Unit,
+    onStartListening: () -> Unit,
     onInterrupt: () -> Unit,
     onEndSession: () -> Unit,
     onReplayAudio: (String) -> Unit,
@@ -116,6 +123,10 @@ fun VoiceAssistantScreen(
     var selectedInterviewType by remember { mutableStateOf(InterviewType.HR) }
     var selectedRoleplayScenario by remember { mutableStateOf(RoleplayScenario.RESTAURANT) }
     var showScenarioPicker by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val microphonePermission = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted -> if (granted) onStartListening() }
 
     // Session Timer
     LaunchedEffect(sessionState) {
@@ -401,8 +412,11 @@ fun VoiceAssistantScreen(
                             if (sessionState == VoiceSessionState.ASSISTANT_SPEAKING) {
                                 onInterrupt()
                             } else {
-                                // User speaking prompt
-                                onSendUtterance("Hello Maya, let's practice speaking today!")
+                                if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                                    onStartListening()
+                                } else {
+                                    microphonePermission.launch(Manifest.permission.RECORD_AUDIO)
+                                }
                             }
                         }
                         .testTag("voice_mic_button"),

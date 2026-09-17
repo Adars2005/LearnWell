@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import java.util.UUID
 
 /**
@@ -108,6 +109,7 @@ class VoiceGatewayService(
         _sessionState.value = VoiceSessionState.CONNECTING
 
         val profile = getLearnerProfile()
+            .copy(language = targetLanguage, level = level)
         val config = orchestrator.createProviderConfig(
             mode = mode,
             targetLanguage = targetLanguage,
@@ -340,6 +342,19 @@ class VoiceGatewayService(
         val updatedProfile = orchestrator.learningEngine.updateLearnerProfileAfterSession(currentProfile, evaluation)
         saveLearnerProfile(updatedProfile)
 
+        // Feedback becomes immediately reviewable. New items have a zero review timestamp,
+        // so the existing Room/FSRS due query places them in the next daily session.
+        evaluation.newWords.forEach { addLearnedWordToVault(it) }
+        evaluation.grammarErrors.forEach { error ->
+            addAdaptiveReviewItem(
+                word = error.correction,
+                meaning = error.explanation,
+                example = error.correctedText,
+                level = currentLevel,
+                category = "Maya grammar: ${error.errorType}"
+            )
+        }
+
         // Log usage
         voiceDao.insertUsageLog(
             VoiceUsageLogEntity(
@@ -361,18 +376,28 @@ class VoiceGatewayService(
      * Adds learned words into user's Vocab Vault.
      */
     suspend fun addLearnedWordToVault(word: LearnerWord) {
-        val vocabWord = com.example.data.model.VocabWord(
+        addAdaptiveReviewItem(word.word, word.meaning, word.example, word.difficulty, "Voice Learning")
+    }
+
+    private suspend fun addAdaptiveReviewItem(
+        word: String,
+        meaning: String,
+        example: String,
+        level: String,
+        category: String
+    ) {
+        if (word.isBlank() || vocabDao.getWordByLanguageAndText(currentLanguage, word) != null) return
+        vocabDao.insertAll(listOf(com.example.data.model.VocabWord(
             language = currentLanguage,
-            word = word.word,
+            word = word,
             phonetic = "",
-            translation = word.meaning,
-            category = "Voice Learning",
-            exampleSentence = word.example,
+            translation = meaning,
+            category = category,
+            exampleSentence = example,
             exampleTranslation = "",
-            audioPrompt = word.word,
-            level = word.difficulty
-        )
-        vocabDao.insertAll(listOf(vocabWord))
+            audioPrompt = word,
+            level = level
+        )))
     }
 
     suspend fun getLearnerProfile(): CompactLearnerProfile {
@@ -382,7 +407,14 @@ class VoiceGatewayService(
                 language = entity.language,
                 nativeLanguage = entity.nativeLanguage,
                 level = entity.level,
-                speakingScore = entity.speakingScore
+                goals = decodeList(entity.goalsJson),
+                weakGrammar = decodeList(entity.weakGrammarJson),
+                weakPronunciation = decodeList(entity.weakPronunciationJson),
+                vocabularyLearning = decodeList(entity.vocabularyLearningJson),
+                vocabularyMastered = decodeList(entity.vocabularyMasteredJson),
+                speakingScore = entity.speakingScore,
+                commonErrors = decodeList(entity.commonErrorsJson),
+                preferredTopics = decodeList(entity.preferredTopicsJson)
             )
         } else {
             CompactLearnerProfile(language = currentLanguage, level = currentLevel)
@@ -395,8 +427,25 @@ class VoiceGatewayService(
                 language = profile.language,
                 nativeLanguage = profile.nativeLanguage,
                 level = profile.level,
-                speakingScore = profile.speakingScore
+                goalsJson = encodeList(profile.goals),
+                weakGrammarJson = encodeList(profile.weakGrammar),
+                weakPronunciationJson = encodeList(profile.weakPronunciation),
+                vocabularyLearningJson = encodeList(profile.vocabularyLearning),
+                vocabularyMasteredJson = encodeList(profile.vocabularyMastered),
+                speakingScore = profile.speakingScore,
+                commonErrorsJson = encodeList(profile.commonErrors),
+                preferredTopicsJson = encodeList(profile.preferredTopics),
+                lastUpdated = System.currentTimeMillis()
             )
         )
     }
+
+    private fun decodeList(value: String): List<String> = try {
+        val json = JSONArray(value)
+        List(json.length()) { index -> json.optString(index) }.filter { it.isNotBlank() }
+    } catch (_: Exception) {
+        emptyList()
+    }
+
+    private fun encodeList(values: List<String>): String = JSONArray(values.distinct()).toString()
 }

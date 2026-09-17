@@ -28,6 +28,9 @@ interface VocabDao {
     @Query("SELECT * FROM vocab_words WHERE language = :language AND repetitions = 0 LIMIT :limit")
     suspend fun getNewWords(language: String, limit: Int): List<VocabWord>
 
+    @Query("SELECT * FROM vocab_words WHERE language = :language AND word = :word LIMIT 1")
+    suspend fun getWordByLanguageAndText(language: String, word: String): VocabWord?
+
     @Query("SELECT * FROM vocab_words WHERE language = :language AND (mistakeCount > 0 OR stability < 1.5) ORDER BY mistakeCount DESC, stability ASC LIMIT :limit")
     fun getWeakestWords(language: String, limit: Int = 10): Flow<List<VocabWord>>
 
