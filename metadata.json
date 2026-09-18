@@ -1,0 +1,6 @@
+{
+  "name": "LinguaBloom",
+  "description": "Personalized language learning with Teacher Maya, spaced repetition memory garden, interactive pronunciation drills, and daily vocabulary mastery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

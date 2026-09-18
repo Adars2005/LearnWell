@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "decks": [
+    {
+      "language": "Hindi",
+      "level": "A1",
+      "word": "एक सेब",
+      "phonetic": "ek seb",
+      "translation": "an apple",
+      "category": "Food",
+      "exampleSentence": "यह एक सेब है।",
+      "exampleTranslation": "This is an apple.",
+      "audioPrompt": "एक सेब",
+      "teacherTip": "Maya's Tip: 'Seb' is pronounced with a soft 's'. Remember: 'Save an apple for Teacher Maya!' In Hindi, fruits are masculine nouns unless ending in 'i'."
+    },
+    {
+      "language": "Hindi",
+      "level": "A1",
+      "word": "किताब",
+      "phonetic": "kitaab",
+      "translation": "book",
+      "category": "Basics",
+      "exampleSentence": "वह एक किताब है।",
+      "exampleTranslation": "That is a book.",
+      "audioPrompt": "किताब",
+      "teacherTip": "Maya's Tip: 'Kitaab' has a long 'aa' vowel sound. Books are considered revered symbols of the goddess Saraswati in Indian tradition."
+    },
+    {
+      "language": "Hindi",
+      "level": "A1",
+      "word": "नमस्ते",
+      "phonetic": "namaste",
+      "translation": "hello",
+      "category": "Greetings",
+      "exampleSentence": "नमस्ते, आप कैसे हैं?",
+      "exampleTranslation": "Hello, how are you?",
+      "audioPrompt": "नमस्ते",
+      "teacherTip": "Maya's Tip: 'Namaste' means 'I bow to the divine spark in you'. Accompany it with palms pressed together at chest level."
+    },
+    {
+      "language": "Spanish",
+      "level": "A1",
+      "word": "hola",
+      "phonetic": "oh-lah",
+      "translation": "hello",
+      "category": "Greetings",
+      "exampleSentence": "¡Hola! ¿Cómo estás hoy?",
+      "exampleTranslation": "Hello! How are you today?",
+      "audioPrompt": "hola",
+      "teacherTip": "Maya's Tip: The 'h' in Spanish is always silent! Pronounce it like 'oh-lah'."
+    },
+    {
+      "language": "Spanish",
+      "level": "A1",
+      "word": "manzana",
+      "phonetic": "mahn-zah-nah",
+      "translation": "apple",
+      "category": "Food",
+      "exampleSentence": "Como una manzana roja.",
+      "exampleTranslation": "I eat a red apple.",
+      "audioPrompt": "manzana",
+      "teacherTip": "Maya's Tip: 'La manzana' is feminine. Pair it with 'una' and 'roja'."
+    },
+    {
+      "language": "French",
+      "level": "A1",
+      "word": "bonjour",
+      "phonetic": "bohn-zhoor",
+      "translation": "hello",
+      "category": "Greetings",
+      "exampleSentence": "Bonjour, comment allez-vous?",
+      "exampleTranslation": "Good day, how are you?",
+      "audioPrompt": "bonjour",
+      "teacherTip": "Maya's Tip: Literally 'good day' (bon + jour). Greeting shopkeepers with 'bonjour' is considered polite French etiquette."
+    },
+    {
+      "language": "Japanese",
+      "level": "A1",
+      "word": "こんにちは",
+      "phonetic": "konnichiwa",
+      "translation": "hello",
+      "category": "Greetings",
+      "exampleSentence": "こんにちは、元気ですか？",
+      "exampleTranslation": "Hello, are you well?",
+      "audioPrompt": "こんにちは",
+      "teacherTip": "Maya's Tip: Even though it ends with the kana 'ha' (は), it is pronounced 'wa' here because it functions as an ancient topic marker!"
+    },
+    {
+      "language": "German",
+      "level": "A1",
+      "word": "Guten Tag",
+      "phonetic": "goo-ten tahk",
+      "translation": "good day",
+      "category": "Greetings",
+      "exampleSentence": "Guten Tag, wie geht es Ihnen?",
+      "exampleTranslation": "Good day, how are you?",
+      "audioPrompt": "Guten Tag",
+      "teacherTip": "Maya's Tip: All German nouns (like Tag) are always capitalized! 'Guten' takes -en in the accusative greeting form."
+    },
+    {
+      "language": "German",
+      "level": "A1",
+      "word": "Apfel",
+      "phonetic": "up-fel",
+      "translation": "apple",
+      "category": "Food",
+      "exampleSentence": "Ich esse einen süßen Apfel.",
+      "exampleTranslation": "I am eating a sweet apple.",
+      "audioPrompt": "Apfel",
+      "teacherTip": "Maya's Tip: Remember 'der Apfel' is masculine. In accusative, 'ein Apfel' becomes 'einen Apfel'."
+    },
+    {
+      "language": "Italian",
+      "level": "A1",
+      "word": "ciao",
+      "phonetic": "chow",
+      "translation": "hello",
+      "category": "Greetings",
+      "exampleSentence": "Ciao, come stai?",
+      "exampleTranslation": "Hi, how are you?",
+      "audioPrompt": "ciao",
+      "teacherTip": "Maya's Tip: 'Ciao' works for both 'hello' and 'goodbye' among friends. Derived from Venetian 's-ciavo vostro' ('at your service')."
+    },
+    {
+      "language": "Korean",
+      "level": "A1",
+      "word": "안녕하세요",
+      "phonetic": "annyeonghaseyo",
+      "translation": "hello",
+      "category": "Greetings",
+      "exampleSentence": "안녕하세요! 만나서 반갑습니다.",
+      "exampleTranslation": "Hello! Nice to meet you.",
+      "audioPrompt": "안녕하세요",
+      "teacherTip": "Maya's Tip: Literally means 'Are you in peace?'. A polite bow of about 15-30 degrees accompanies this greeting."
+    },
+    {
+      "language": "Mandarin",
+      "level": "A1",
+      "word": "你好",
+      "phonetic": "nǐ hǎo",
+      "translation": "hello",
+      "category": "Greetings",
+      "exampleSentence": "你好！很高兴认识你。",
+      "exampleTranslation": "Hello! Very glad to meet you.",
+      "audioPrompt": "你好",
+      "teacherTip": "Maya's Tip: Third-tone sandhi rule! When two third tones meet, the first 'nǐ' changes to a second rising tone 'ní hǎo'."
+    }
+  ]
+}
